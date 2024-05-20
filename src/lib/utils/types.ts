@@ -8,3 +8,4 @@ export type Prettify<T> = {
 export type SafeSession = Prettify<Omit<Session, 'user'> & { safeUser: User }>;
 export type TypedSupabaseClient = SupabaseClient<Database>;
 export type Tables = Database['public']['Tables'];
+export type Todo = Tables['todos'];
