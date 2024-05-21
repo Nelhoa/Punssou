@@ -1,10 +1,26 @@
 <script lang="ts">
+	import PlayerSelection from '$lib/components/Punto/PlayerSelection.svelte';
 	import PuntoGame from '$lib/components/Punto/PuntoGame.svelte';
+	import type { PuntoPlayer } from '$lib/models/Punto/punto-player.svelte';
 	import { signInWithGithub } from '$lib/utils/Auth/sign-in-with-github.js';
 	import { signOut } from '$lib/utils/Auth/sign-out';
 	import Broadcast from './Broadcast.svelte';
 
-	export let data;
+	// export let data;
+	let start = $state(false);
+	let players = $state<PuntoPlayer[]>([]);
+	let trigger = $state<Symbol>(Symbol());
+
+	function onstart(selected: PuntoPlayer[]) {
+		selected.forEach((p) => p.resetDeck());
+		players = selected;
+		start = true;
+	}
+
+	function restart() {
+		players.forEach((p) => p.resetDeck());
+		trigger = Symbol();
+	}
 </script>
 
 <!-- <div class="flex w-full h-screen items-center justify-center gap-3 flex-col">
@@ -26,4 +42,10 @@
 	{/if}
 </div> -->
 
-<PuntoGame />
+{#if start}
+	{#key trigger}
+		<PuntoGame {restart} back={() => (start = false)} {players} />
+	{/key}
+{:else}
+	<PlayerSelection {onstart} {players} />
+{/if}

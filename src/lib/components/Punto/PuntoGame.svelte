@@ -1,67 +1,39 @@
 <script lang="ts">
-	import { PuntoBoard } from '$lib/models/Punto/punto-board.svelte';
 	import { PuntoPlayer } from '$lib/models/Punto/punto-player.svelte';
-	import PuntoPlace from './PuntoPlace.svelte';
+	import { newGame } from '$lib/models/Punto/punto-game.svelte';
+	import PuntoBoard from './PuntoBoard.svelte';
+	import GameInfo from './GameInfo.svelte';
 
-	const player = new PuntoPlayer('Neil', 'blue');
-	const board = new PuntoBoard();
+	interface Props {
+		players: PuntoPlayer[];
+		back: () => any;
+		restart: () => any;
+	}
+
+	let { players, back, restart }: Props = $props();
+	let game = $state(newGame(players, restart));
 </script>
 
-<div class="h-screen w-full bg-blue-50 p-5">
-	<div class="text-lg font-bold text-black/80">Bienvenue sur le Punto</div>
-	<div>Joueur : {player.name}</div>
-	<div>
-		<div class="font-semibold mb-1">Vos cartes</div>
-		<div class="flex gap-1">
-			{#each player.deck.cards as card}
-				<div
-					class="font-semibold text-white bg-[--color] size-5 flex place-items-center justify-center rounded"
-					style="--color: {player.deck.color}"
-				>
-					{card.number}
-				</div>
-			{/each}
-		</div>
-	</div>
-	{#if player.cardInHand}
-		<div>
-			<div class="font-semibold mb-1">Carte en main</div>
-			<div class="flex gap-1">
-				<div
-					class="font-semibold text-white bg-[--color] size-5 flex place-items-center justify-center rounded"
-					style="--color: {player.deck.color}"
-				>
-					{player.cardInHand.number}
-				</div>
-			</div>
-		</div>
-	{/if}
-	<div>
-		<div class="font-semibold mb-1">Plateau</div>
-		<div
-			class="board"
-			style="
-            --y-size: {board.grid.xSize}; 
-            --x-size: {board.grid.ySize};
-            "
+<div class="h-screen w-full grid grid-rows-[50px_1fr]">
+	<div class="flex gap-3 items-center justify-between px-4 bg-[--surface-color-3]">
+		<div class="text-xl font-bold text-black/80">Punto</div>
+		<button
+			class="border border-black/10 px-3 py-[2px] rounded hover:bg-black/5"
+			onclick={() => back?.()}>Retour</button
 		>
-			{#each board.mapToShow as place}
-				<PuntoPlace {place} {player} />
-			{/each}
-		</div>
+	</div>
+	<div class="grid grid-rows-[200px_1fr] sm:grid-rows-1 sm:grid-cols-[250px_1fr]">
+		{#key game}
+			<GameInfo />
+			<PuntoBoard />
+		{/key}
 	</div>
 </div>
 
 <style>
-	.board {
-		--size: 50px;
-		display: grid;
-		gap: 4px;
-		width: fit;
-		justify-content: start;
-		align-content: center;
-		place-items: center;
-		grid-template-columns: repeat(var(--x-size), var(--size));
-		grid-template-rows: repeat(var(--y-size), var(--size));
+	:global(:root) {
+		--surface-color-1: hsl(30, 90%, 93%);
+		--surface-color-2: hsl(30, 80%, 88%);
+		--surface-color-3: hsl(30, 70%, 80%);
 	}
 </style>

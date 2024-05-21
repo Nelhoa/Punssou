@@ -1,14 +1,18 @@
-import type { PuntoBoard } from './punto-board.svelte';
+import { PuntoBoard } from './punto-board.svelte';
 import type { PuntoCard } from './punto-cards.svelte';
 
 type placeState = 'empty' | 'locked' | 'used' | 'too far';
 
 export class PuntoPlace {
-	board: PuntoBoard;
-	x: number;
-	y: number;
+	win = $state(false);
+	board = $state<PuntoBoard>() as PuntoBoard;
+	outOfLimits = $state<boolean>(false);
+	flash = $state<boolean>(false);
+	x = $state(0);
+	y = $state(0);
 	private _card = $state<PuntoCard | undefined>();
-	state = $state<placeState>('too far');
+	private relativeState = $state<placeState>('too far');
+	readonly state: placeState = $derived(!this.outOfLimits ? this.relativeState : 'locked');
 	private _neighbours: PuntoPlace[] | undefined;
 
 	get neighbours() {
@@ -48,22 +52,23 @@ export class PuntoPlace {
 			this._card = card;
 		}
 		this.update();
+		this.board.game.played();
 	}
 
 	init(state: placeState) {
-		this.state = state;
-		this.neighbours.forEach((n) => (n.state = 'locked'));
+		this.relativeState = state;
+		this.neighbours.forEach((n) => (n.relativeState = 'locked'));
 	}
 
 	private update() {
-		const oldState = this.state;
-		this.state = this.getNewState();
-		if (oldState !== this.state) this.neighbours.forEach((n) => n.update());
+		const oldState = this.relativeState;
+		this.relativeState = this.getNewState();
+		if (oldState !== this.relativeState) this.neighbours.forEach((n) => n.update());
 	}
 
 	private getNewState(): placeState {
 		if (this._card) return 'used';
-		const neighbourStates = this.neighbours.map((i) => i.state);
+		const neighbourStates = this.neighbours.map((i) => i.relativeState);
 		if (neighbourStates.includes('used')) return 'empty';
 		if (neighbourStates.includes('empty')) return 'locked';
 		return 'too far';

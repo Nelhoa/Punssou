@@ -1,14 +1,18 @@
-import type { PuntoCard } from './punto-cards.svelte';
 import { PuntoDeck } from './punto-deck.svelte';
 
 export class PuntoPlayer {
 	name: string;
-	deck: PuntoDeck;
-	cardInHand = $state<PuntoCard | undefined>();
+	color: string;
+	deck = $state() as PuntoDeck;
 
 	constructor(name: string, color: string) {
 		this.name = name;
+		this.color = color;
 		this.deck = new PuntoDeck(color, this);
-		this.cardInHand = this.deck.pick();
+	}
+
+	resetDeck() {
+		const color = this.color;
+		this.deck = new PuntoDeck(color, this);
 	}
 }
