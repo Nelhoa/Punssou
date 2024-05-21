@@ -7,13 +7,18 @@
 	const { currentCard } = $derived(game);
 </script>
 
-<div class="p-3 bg-[--surface-color-2] flex flex-col gap-3">
+<div class="p-4 pt-6 bg-[--surface-color-2] flex flex-col gap-3">
 	{#if currentCard}
 		<div>
 			<div class="font-semibold mb-1 mt-5 leading-none">{currentCard.player.name}</div>
 			<div class="mb-3 mt-2 font-semibold text-black/70">À ton tour !</div>
+
 			<div class="grid grid-cols-1 size-[80px]" style="grid-template-areas: card;">
-				<CardItem card={currentCard} />
+				{#key currentCard}
+					<div in:fly={{ x: -10 }}>
+						<CardItem card={currentCard} />
+					</div>
+				{/key}
 			</div>
 		</div>
 
@@ -31,9 +36,7 @@
 			</div>
 		</div> -->
 	{/if}
-	{#if game.isOver}
-		<button onclick={() => game.restart()}> Recommencer ! </button>
-	{/if}
+
 	{#if game.winner}
 		<div in:fly={{ x: -10 }}>
 			<div
@@ -56,5 +59,13 @@
 				</div>
 			</div>
 		</div>
+	{/if}
+	{#if game.isOver}
+		<button
+			class="w-fit mt-3 border border-black/10 rounded px-3 py-[2px] hover:bg-black/5"
+			onclick={() => game.restart()}
+		>
+			Recommencer !
+		</button>
 	{/if}
 </div>

@@ -13,6 +13,7 @@
   "[typescript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
   },
+  "tailwindCSS.classAttributes": ["class", "className", "ngClass", ".*Styles"],
   "peacock.color": "#572911",
   "workbench.colorCustomizations": {
     "activityBar.activeBackground": "#823d19",

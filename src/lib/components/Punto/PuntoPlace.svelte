@@ -2,7 +2,10 @@
 	import { getGame } from '$lib/models/Punto/punto-game.svelte';
 	import type { PuntoPlace } from '$lib/models/Punto/punto-place.svelte';
 	import { quintOut } from 'svelte/easing';
-	import { scale } from 'svelte/transition';
+	import { fly, scale } from 'svelte/transition';
+	import Card from './Card.svelte';
+	import { PuntoCard } from '$lib/models/Punto/punto-cards.svelte';
+	import Cross from '../Icons/Cross.svelte';
 
 	let { place }: { place: PuntoPlace } = $props();
 	const game = getGame();
@@ -10,14 +13,33 @@
 
 	function onclick() {
 		if (!currentCard) return;
+		hoverCard = undefined;
 		place.setCard(currentCard);
 	}
 
 	let show = $state(false);
+	let hoverCard = $state<PuntoCard | undefined>();
+	let forbiden = $state<boolean>();
 
 	$effect(() => {
 		show = true;
 	});
+
+	function onmouseenter() {
+		if (!currentCard) return;
+		if (place.state === 'locked' || place.state === 'too far') return;
+		if (game.isOver) return;
+		if (!place.card || place.card.number < currentCard.number) {
+			hoverCard = currentCard;
+		} else if (place.card && place.card.number >= currentCard.number) {
+			forbiden = true;
+		}
+	}
+
+	function onmouseleave() {
+		hoverCard = undefined;
+		forbiden = false;
+	}
 </script>
 
 <!--  -->
@@ -26,15 +48,32 @@
 	<button
 		disabled={!currentCard || ['locked', 'too far'].includes(place.state)}
 		{onclick}
+		{onmouseenter}
+		{onmouseleave}
 		class:isOver={game.isOver}
-		class:hasWinner={Boolean(game.winner)}
-		class:win={place.win}
 		class:flash={place.flash}
-		class={`place ${place.state}`}
+		class:cardHover={hoverCard}
+		class={`place relative ${place.state}`}
 		transition:scale={{ start: 0, easing: quintOut }}
 		style={`--card-color:${place.card ? place.card.deck.color : currentCard?.deck.color}`}
 	>
-		{place.card?.number ?? ' '}
+		{#if place.card}
+			<div class="h-full w-full" in:scale={{ start: 2 }}>
+				<Card card={place.card} {place} styles="w-full h-full" />
+			</div>
+		{:else}
+			{' '}
+		{/if}
+		{#if hoverCard}
+			<div class="absolute inset-1" in:fly={{ x: -5 }}>
+				<Card card={hoverCard} styles="w-full h-full shadow-lg shadow-black/30" />
+			</div>
+		{/if}
+		{#if forbiden}
+			<div class="absolute inset-0 flex justify-center items-center animate-pulse">
+				<Cross styles="text-red-500/80" width={30} />
+			</div>
+		{/if}
 	</button>
 {/if}
 
@@ -54,11 +93,6 @@
 		&.empty {
 			background-color: rgba(0, 0, 0, 0.11);
 
-			&:hover {
-				background-color: var(--card-color);
-				opacity: 30%;
-			}
-
 			&.isOver {
 				transition-property: opacity;
 				transition-duration: 500ms;
@@ -67,24 +101,12 @@
 		}
 
 		&.used {
-			background-color: var(--card-color);
-
-			&.hasWinner:not(.win) {
-				transition-property: opacity;
-				transition-duration: 500ms;
-				opacity: 0.15;
-			}
-
-			&.win {
-				border: 2px solid rgba(0, 0, 0, 0.2);
-				--shadow-strength: 100%;
-				box-shadow: var(--shadow-2);
-			}
+			background-color: transparent;
 		}
 
 		&.flash {
+			transition: all 1s ease-in-out;
 			background-color: white;
-			/* transform: scale(130%); */
 		}
 	}
 </style>
