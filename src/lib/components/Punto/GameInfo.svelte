@@ -16,7 +16,7 @@
 			<div class="grid grid-cols-1 size-[80px]" style="grid-template-areas: card;">
 				{#key currentCard}
 					<div in:fly={{ x: -10 }}>
-						<CardItem card={currentCard} />
+						<CardItem width={70} card={currentCard} />
 					</div>
 				{/key}
 			</div>

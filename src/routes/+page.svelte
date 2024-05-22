@@ -23,6 +23,10 @@
 	}
 </script>
 
+<svelte:head>
+	<title>Punto</title>
+</svelte:head>
+
 <!-- <div class="flex w-full h-screen items-center justify-center gap-3 flex-col">
 	<div class="font-bold text-lg">
 		{data.user?.email ?? 'Pas connecté'}

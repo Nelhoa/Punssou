@@ -79,10 +79,9 @@ export class PuntoGame {
 
 	private async flashPlaces(places: PuntoPlace[]) {
 		for (const place of places) {
-			place.flash = true;
+			place.flashFor(300);
 			place.win = true;
 			await wait(80);
-			place.flash = false;
 		}
 	}
 

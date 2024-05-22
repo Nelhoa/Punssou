@@ -1,3 +1,4 @@
+import { wait } from '$lib/utils/wait';
 import { PuntoBoard } from './punto-board.svelte';
 import type { PuntoCard } from './punto-cards.svelte';
 
@@ -72,6 +73,12 @@ export class PuntoPlace {
 		if (neighbourStates.includes('used')) return 'empty';
 		if (neighbourStates.includes('empty')) return 'locked';
 		return 'too far';
+	}
+
+	async flashFor(ms: number) {
+		this.flash = true;
+		await wait(ms);
+		this.flash = false;
 	}
 
 	log(message: string, value?: any) {

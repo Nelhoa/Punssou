@@ -3,15 +3,16 @@
 	import type { PuntoPlace } from '$lib/models/Punto/punto-place.svelte';
 
 	import { cn } from '$lib/utils/cn';
+	import CardIcon from '../Icons/Cards/CardIcon.svelte';
 
 	interface Props {
 		card: PuntoCard;
 		place?: PuntoPlace;
 		styles?: string;
+		width?: number;
 	}
 
-	let { card, styles, place }: Props = $props();
-	$inspect(Boolean(place?.board.game.winner));
+	let { card, styles, place, width }: Props = $props();
 </script>
 
 <div
@@ -22,7 +23,8 @@
 	class={cn('card size-[80px] text-2xl', styles)}
 	style="--color: {card.color}"
 >
-	{card.number}
+	<!-- {card.number} -->
+	<CardIcon {width} number={card.number} />
 </div>
 
 <style>
@@ -48,9 +50,10 @@
 		}
 
 		&.flash {
-			transition: transform 1s ease-in-out;
+			transition: transform 350ms cubic-bezier(0.57, -1.09, 0.57, 1.8);
 			background-color: white;
-			transform: scale(50%);
+			color: var(--color);
+			transform: scale(80%);
 		}
 	}
 </style>
