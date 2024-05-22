@@ -14,13 +14,6 @@
 	let players = $state<PuntoPlayer[]>([...givenPlayers] ?? []);
 	let newName = $state<string>('');
 
-	function onchange(e: Event & { currentTarget: HTMLInputElement }) {
-		const playerName = e.currentTarget.value;
-		if (playerName.length < 2 || playerName.length > 20) return console.log('Min car. 2, Max 20');
-		e.currentTarget.value = '';
-		newPlayer(playerName);
-	}
-
 	function newPlayer(name: string) {
 		players.push(new PuntoPlayer(name));
 	}
@@ -57,11 +50,12 @@
 		/>
 
 		<button
+			disabled={players.length >= 4 || newName.length < 1}
 			onclick={() => {
 				newPlayer(newName);
 				newName = '';
 			}}
-			class="border px-3 py-1 rounded text-sm font-semibold">Ajouter</button
+			class="border px-3 py-1 rounded text-sm font-semibold disabled:opacity-30">Ajouter</button
 		>
 	</div>
 
