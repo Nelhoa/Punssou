@@ -23,6 +23,7 @@ export class PuntoGame {
 	readonly winAt: number;
 	private _winner = $state<PuntoPlayer | undefined>();
 	private _isOver = $state(false);
+	endMessage = $state<string>('');
 	board = $state() as PuntoBoard;
 	players = $state<PuntoPlayer[]>([]);
 	playingPlayers = $derived(this.players.filter((i) => i.deck?.cards.length));
@@ -56,21 +57,24 @@ export class PuntoGame {
 		const series = this.board.getAllSeries();
 		const winningSeries = series.filter((serie) => serie.size >= this.winAt);
 		if (winningSeries.length > 0) return this.win(winningSeries);
-		if (this.playingPlayers.length === 0) throw this.null();
-		this.setNextCard();
+		if (this.playingPlayers.length === 0) return this.stop('Plus aucun joueur n’a de carte');
+		const currentCard = this.setNextCard();
+		if (!currentCard) return this.stop('Plus aucun joueur n’a de carte');
+		if (!this.board.canPlay(currentCard)) return this.stop('Impossible de poser la carte');
 	}
 
-	private null() {
-		this.end();
+	private stop(message: string) {
+		this.end(message);
 	}
 
-	private end() {
+	private end(message: string) {
+		this.endMessage = message;
 		this._currentCard = undefined;
 		this._isOver = true;
 	}
 
 	private async win(series: ReturnType<typeof this.board.getAllSeries>) {
-		this.end();
+		this.end(`Bravo. Tu es très fort.`);
 		await wait(350);
 		const promises = series.map((s) => this.flashPlaces(s.serie.map((i) => i.place)));
 		await Promise.all(promises);
@@ -87,7 +91,7 @@ export class PuntoGame {
 
 	private setNextCard() {
 		if (!this._currentCard) return (this._currentCard = this.players[0].deck?.pick());
-		this._currentCard = this.getNextPlayer(this._currentCard.deck.player).deck?.pick();
+		return (this._currentCard = this.getNextPlayer(this._currentCard.deck.player).deck?.pick());
 	}
 
 	private getNextPlayer(player: PuntoPlayer) {

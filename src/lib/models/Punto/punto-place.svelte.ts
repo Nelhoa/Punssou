@@ -75,7 +75,8 @@ export class PuntoPlace {
 		return 'too far';
 	}
 
-	async flashFor(ms: number) {
+	async flashFor(ms: number, delay?: number) {
+		if (delay) await wait(delay);
 		this.flash = true;
 		await wait(ms);
 		this.flash = false;

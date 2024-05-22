@@ -49,6 +49,14 @@ export class PuntoBoard {
 		return place;
 	}
 
+	canPlay(card: PuntoCard) {
+		const freePlaces = this.map.filter(
+			(i) => (i.card && i.card.number < card.number) || i.state === 'empty'
+		);
+		if (freePlaces.length > 0) return true;
+		return false;
+	}
+
 	getAllSeries() {
 		const colStarts = getColsStart(this);
 		const colSeries = colStarts
@@ -68,7 +76,7 @@ export class PuntoBoard {
 			.flat()
 			.map((serie) => ({ size: serie.length, type: 'dia', deck: serie[0].card.deck, serie }));
 
-		const mirrordiagStarts = [...colStarts.slice(0, colStarts.length - 2), ...getRowsEnds(this)];
+		const mirrordiagStarts = [...colStarts.slice(0, colStarts.length - 1), ...getRowsEnds(this)];
 		const mirrordiagSeries = mirrordiagStarts
 			.map((index) => getSeries(this, index, 'dia-mirror'))
 			.flat()

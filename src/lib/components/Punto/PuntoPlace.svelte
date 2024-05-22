@@ -92,11 +92,16 @@
 
 		&.empty {
 			background-color: rgba(0, 0, 0, 0.11);
+			transition: color 300ms ease-in-out;
 
 			&.isOver {
 				transition-property: opacity;
 				transition-duration: 500ms;
 				opacity: 0;
+			}
+
+			&.flash {
+				background-color: white;
 			}
 		}
 
@@ -104,9 +109,9 @@
 			background-color: transparent;
 		}
 
-		&.flash {
+		/* &.flash {
 			transition: all 1s ease-in-out;
 			background-color: white;
-		}
+		} */
 	}
 </style>

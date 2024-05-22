@@ -22,7 +22,7 @@
 			</div>
 		</div>
 
-		<!-- <div>
+		<div>
 			<div class="font-semibold mb-1 mt-5">Tes cartes</div>
 			<div class="flex gap-1 flex-wrap">
 				{#each currentCard.deck.cards as card}
@@ -34,7 +34,7 @@
 					</div>
 				{/each}
 			</div>
-		</div> -->
+		</div>
 	{/if}
 
 	{#if game.winner}
@@ -61,6 +61,7 @@
 		</div>
 	{/if}
 	{#if game.isOver}
+		<div>{game.endMessage}</div>
 		<button
 			class="w-fit mt-3 border border-black/10 rounded px-3 py-[2px] hover:bg-black/5"
 			onclick={() => game.restart()}
