@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { PuntoCard } from '$lib/models/Punto/punto-card.svelte';
 	import type { PuntoPlace } from '$lib/models/Punto/punto-place.svelte';
+	import { settings } from '$lib/models/Punto/punto-settings.svelte';
 
 	import { cn } from '$lib/utils/cn';
 	import CardIcon from '../Icons/Cards/CardIcon.svelte';
@@ -25,7 +26,6 @@
 	class={cn('card size-[80px] text-2xl', styles)}
 	style="--color: {card.fightFor !== null ? card.color.color : 'hsl(0,0%,20%'}"
 >
-	<!-- {card.number} -->
 	<CardIcon {width} number={card.number} />
 </div>
 

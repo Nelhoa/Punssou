@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { PuntoPlayer } from '$lib/models/Punto/punto-player.svelte';
+	import { settings } from '$lib/models/Punto/punto-settings.svelte';
 	import { wait } from '$lib/utils/wait';
 	import _ from 'lodash';
 
@@ -52,6 +53,11 @@
 		type="text"
 		{onchange}
 	/>
+
+	<div>
+		<input type="checkbox" bind:checked={settings.showNumber} />
+		Montrer les nombres
+	</div>
 
 	{#if onstart}
 		<button

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { settings } from '$lib/models/Punto/punto-settings.svelte';
 	import Card1 from './Card1.svelte';
 	import Card2 from './Card2.svelte';
 	import Card3 from './Card3.svelte';
@@ -18,7 +19,9 @@
 	let { number, styles = '', width = $bindable(53) }: Props = $props();
 </script>
 
-{#if number === 1}
+{#if settings.showNumber}
+	{number}
+{:else if number === 1}
 	<Card1 {styles} {width} />
 {:else if number === 2}
 	<Card2 {styles} {width} />
