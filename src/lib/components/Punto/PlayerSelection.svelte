@@ -11,7 +11,8 @@
 
 	let { onstart, players: givenPlayers }: Props = $props();
 
-	let players = $state<PuntoPlayer[]>(givenPlayers ?? []);
+	let players = $state<PuntoPlayer[]>([...givenPlayers] ?? []);
+	let newName = $state<string>('');
 
 	function onchange(e: Event & { currentTarget: HTMLInputElement }) {
 		const playerName = e.currentTarget.value;
@@ -46,13 +47,23 @@
 		{/each}
 	</div>
 
-	<input
-		use:inputMount
-		class="border rounded px-3 py-1 focus:outline-none focus-visible:shadow"
-		disabled={players.length >= 4}
-		type="text"
-		{onchange}
-	/>
+	<div>
+		<input
+			use:inputMount
+			class="border rounded px-3 py-1 focus:outline-none focus-visible:shadow"
+			disabled={players.length >= 4}
+			bind:value={newName}
+			type="text"
+		/>
+
+		<button
+			onclick={() => {
+				newPlayer(newName);
+				newName = '';
+			}}
+			class="border px-3 py-1 rounded text-sm font-semibold">Ajouter</button
+		>
+	</div>
 
 	<div>
 		<input type="checkbox" bind:checked={settings.showNumber} />
