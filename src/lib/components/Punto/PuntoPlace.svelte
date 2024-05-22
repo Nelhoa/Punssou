@@ -1,18 +1,47 @@
 <script lang="ts">
 	import { getGame } from '$lib/models/Punto/punto-game.svelte';
 	import type { PuntoPlace } from '$lib/models/Punto/punto-place.svelte';
-	import { quintOut } from 'svelte/easing';
-	import { fly, scale } from 'svelte/transition';
+	import { linear, quintIn, quintOut } from 'svelte/easing';
+	import { fly, scale, type TransitionConfig } from 'svelte/transition';
 	import Card from './Card.svelte';
-	import { PuntoCard } from '$lib/models/Punto/punto-cards.svelte';
+	import { PuntoCard } from '$lib/models/Punto/punto-card.svelte';
 	import Cross from '../Icons/Cross.svelte';
+	import { wait } from '$lib/utils/wait';
 
 	let { place }: { place: PuntoPlace } = $props();
 	const game = getGame();
 	const { currentCard } = $derived(game);
+	let justClicked = $state(false);
+
+	function flyOver(
+		element: HTMLElement,
+		config: TransitionConfig & { x?: number; y?: number; opacity?: number }
+	) {
+		element.style.zIndex = '1';
+		return fly(element, config);
+	}
+
+	async function setHover(card: PuntoCard) {
+		hoverCard = card;
+		await wait(4000);
+		hoverCard = undefined;
+	}
+
+	async function setForbiden() {
+		forbiden = true;
+		await wait(4000);
+		forbiden = false;
+	}
+
+	async function setJustClicked() {
+		justClicked = true;
+		await wait(350);
+		justClicked = false;
+	}
 
 	function onclick() {
 		if (!currentCard) return;
+		setJustClicked();
 		hoverCard = undefined;
 		place.setCard(currentCard);
 	}
@@ -30,19 +59,18 @@
 		if (place.state === 'locked' || place.state === 'too far') return;
 		if (game.isOver) return;
 		if (!place.card || place.card.number < currentCard.number) {
-			hoverCard = currentCard;
+			setHover(currentCard);
 		} else if (place.card && place.card.number >= currentCard.number) {
-			forbiden = true;
+			setForbiden();
 		}
 	}
 
 	function onmouseleave() {
+		justClicked = false;
 		hoverCard = undefined;
 		forbiden = false;
 	}
 </script>
-
-<!--  -->
 
 {#if show}
 	<button
@@ -53,25 +81,37 @@
 		class:isOver={game.isOver}
 		class:flash={place.flash}
 		class:cardHover={hoverCard}
-		class={`place relative ${place.state}`}
+		class={`place relative ${place.state} grid grid-cols-1`}
 		transition:scale={{ start: 0, easing: quintOut }}
-		style={`--card-color:${place.card ? place.card.deck.color : currentCard?.deck.color}`}
+		style={`--card-color:${place.card ? place.card.color.color : currentCard?.color.color};
+				grid-template-areas: place`}
 	>
 		{#if place.card}
-			<div class="h-full w-full" in:scale={{ start: 2 }}>
-				<Card card={place.card} {place} styles="w-full h-full" />
+			<div
+				class="h-full w-full absolute"
+				style="grid-area: 1/1;"
+				in:scale={{ start: 2, delay: 40 }}
+				out:flyOver={{ x: 35, duration: 350 }}
+			>
+				<Card
+					card={place.card}
+					{place}
+					forbiden={forbiden && !justClicked}
+					styles="w-full h-full"
+				/>
 			</div>
 		{:else}
 			{' '}
 		{/if}
-		{#if hoverCard}
+
+		{#if hoverCard && !justClicked}
 			<div class="absolute inset-1" in:fly={{ x: -5 }}>
 				<Card card={hoverCard} styles="w-full h-full shadow-lg shadow-black/30" />
 			</div>
 		{/if}
-		{#if forbiden}
+		{#if forbiden && !justClicked}
 			<div class="absolute inset-0 flex justify-center items-center animate-pulse">
-				<Cross styles="text-red-500/80" width={30} />
+				<Cross styles="text-red-500" width={30} />
 			</div>
 		{/if}
 	</button>

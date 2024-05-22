@@ -1,6 +1,6 @@
 import { wait } from '$lib/utils/wait';
 import { PuntoBoard } from './punto-board.svelte';
-import type { PuntoCard } from './punto-cards.svelte';
+import type { PuntoCard } from './punto-card.svelte';
 
 type placeState = 'empty' | 'locked' | 'used' | 'too far';
 

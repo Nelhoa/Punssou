@@ -10,20 +10,17 @@
 
 	let { onstart, players: givenPlayers }: Props = $props();
 
-	const players = $state<PuntoPlayer[]>(givenPlayers ?? []);
-	const colors = $state(_.shuffle(['blue', 'red', 'orange', 'green']));
+	let players = $state<PuntoPlayer[]>(givenPlayers ?? []);
 
 	function onchange(e: Event & { currentTarget: HTMLInputElement }) {
 		const playerName = e.currentTarget.value;
 		if (playerName.length < 2 || playerName.length > 20) return console.log('Min car. 2, Max 20');
-		const color = colors.pop() as string;
 		e.currentTarget.value = '';
-		if (color.length === 0) e.currentTarget.blur();
-		newPlayer(playerName, color);
+		newPlayer(playerName);
 	}
 
-	function newPlayer(name: string, color: string) {
-		players.push(new PuntoPlayer(name, color));
+	function newPlayer(name: string) {
+		players.push(new PuntoPlayer(name));
 	}
 
 	function inputMount(e: HTMLInputElement) {
@@ -34,19 +31,24 @@
 <div class="w-full h-screen flex flex-col gap-3 items-center justify-center">
 	<div class="flex flex-col gap-1">
 		{#each players as player}
-			<input
-				class="w-[90%] max-w-[200px] px-3 py-1 bg-[--color] text-white font-semibold rounded"
-				style={`--color: ${player.deck?.color}`}
-				type="text"
-				bind:value={player.name}
-			/>
+			<div class="grid grid-cols-[1fr_auto]">
+				<input
+					class="w-[90%] max-w-[200px] px-3 py-1 bg-blue-500 text-white font-semibold rounded"
+					type="text"
+					bind:value={player.name}
+				/>
+				<button
+					onclick={() => (players = players.filter((p) => p !== player))}
+					class="px-3 py-1 bg-red-500 text-white font-semibold rounded">Suppr.</button
+				>
+			</div>
 		{/each}
 	</div>
 
 	<input
 		use:inputMount
 		class="border rounded px-3 py-1 focus:outline-none focus-visible:shadow"
-		disabled={colors.length === 0}
+		disabled={players.length >= 4}
 		type="text"
 		{onchange}
 	/>

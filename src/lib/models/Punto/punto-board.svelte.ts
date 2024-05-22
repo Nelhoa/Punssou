@@ -1,6 +1,7 @@
-import type { PuntoCard } from './punto-cards.svelte';
+import type { PuntoCard } from './punto-card.svelte';
 import type { PuntoGame } from './punto-game.svelte';
 import { PuntoPlace } from './punto-place.svelte';
+import type { PuntoPlayer } from './punto-player.svelte';
 
 export class PuntoBoard {
 	game: PuntoGame;
@@ -62,19 +63,37 @@ export class PuntoBoard {
 		const colSeries = colStarts
 			.map((index) => getSeries(this, index, 'col'))
 			.flat()
-			.map((serie) => ({ size: serie.length, type: 'col', deck: serie[0].card.deck, serie }));
+			.map((serie) => ({
+				size: serie.length,
+				type: 'col',
+				deck: serie[0].card.deck,
+				player: serie[0].player,
+				serie
+			}));
 
 		const rowStarts = getRowsStart(this);
 		const rowSeries = rowStarts
 			.map((index) => getSeries(this, index, 'row'))
 			.flat()
-			.map((serie) => ({ size: serie.length, type: 'row', deck: serie[0].card.deck, serie }));
+			.map((serie) => ({
+				size: serie.length,
+				type: 'row',
+				deck: serie[0].card.deck,
+				player: serie[0].player,
+				serie
+			}));
 
 		const diagStarts = [...colStarts.slice(1, colStarts.length - 1), ...rowStarts];
 		const diagSeries = diagStarts
 			.map((index) => getSeries(this, index, 'dia'))
 			.flat()
-			.map((serie) => ({ size: serie.length, type: 'dia', deck: serie[0].card.deck, serie }));
+			.map((serie) => ({
+				size: serie.length,
+				type: 'dia',
+				deck: serie[0].card.deck,
+				player: serie[0].player,
+				serie
+			}));
 
 		const mirrordiagStarts = [...colStarts.slice(0, colStarts.length - 1), ...getRowsEnds(this)];
 		const mirrordiagSeries = mirrordiagStarts
@@ -84,6 +103,7 @@ export class PuntoBoard {
 				size: serie.length,
 				type: 'dia-mirror',
 				deck: serie[0].card.deck,
+				player: serie[0].player,
 				serie
 			}));
 		const series = [...colSeries, ...rowSeries, ...diagSeries, ...mirrordiagSeries];
@@ -141,25 +161,25 @@ function getSeries(
 	{ x, y }: { x: number; y: number },
 	direction: 'col' | 'row' | 'dia' | 'dia-mirror'
 ) {
-	type PlaceWithCard = { place: PuntoPlace; card: PuntoCard };
+	type SerieItem = { place: PuntoPlace; card: PuntoCard; player: PuntoPlayer };
 	const addx = ['col', 'dia', 'dia-mirror'].includes(direction) ? 1 : 0;
 	const addy = ['row', 'dia'].includes(direction) ? 1 : direction === 'dia-mirror' ? -1 : 0;
-	const series: PlaceWithCard[][] = [];
-	let currentSerie: PlaceWithCard[] | undefined;
+	const series: SerieItem[][] = [];
+	let currentSerie: SerieItem[] | undefined;
 
-	function createSerie(first: PlaceWithCard) {
-		const newSerie: PlaceWithCard[] = [first];
+	function createSerie(first: SerieItem) {
+		const newSerie: SerieItem[] = [first];
 		series.push(newSerie);
 		return newSerie;
 	}
 
 	function setPlaceInSerie(place: PuntoPlace) {
-		if (!place.card) return (currentSerie = undefined);
-		const item = { place, card: place.card };
+		if (!place.card || place.card.fightFor === null) return (currentSerie = undefined);
+		const item = { place, card: place.card, player: place.card.fightFor };
 		if (!currentSerie) return (currentSerie = createSerie(item));
 		const firstElement = currentSerie[0];
 		if (!firstElement) throw Error('Une série a nécessaire un élément');
-		if (item.card.deck === firstElement.card.deck) return currentSerie.push(item);
+		if (item.card.color === firstElement.card.color) return currentSerie.push(item);
 		currentSerie = createSerie(item);
 	}
 

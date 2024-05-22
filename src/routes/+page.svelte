@@ -12,13 +12,11 @@
 	let trigger = $state<Symbol>(Symbol());
 
 	function onstart(selected: PuntoPlayer[]) {
-		selected.forEach((p) => p.resetDeck());
 		players = selected;
 		start = true;
 	}
 
 	function restart() {
-		players.forEach((p) => p.resetDeck());
 		trigger = Symbol();
 	}
 </script>

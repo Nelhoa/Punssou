@@ -1,10 +1,11 @@
 import { getContext, setContext } from 'svelte';
 import { PuntoBoard } from './punto-board.svelte';
 import { PuntoPlayer } from './punto-player.svelte';
-import type { PuntoCard } from './punto-cards.svelte';
+import type { PuntoCard } from './punto-card.svelte';
 import _ from 'lodash';
 import type { PuntoPlace } from './punto-place.svelte';
 import { wait } from '$lib/utils/wait';
+import { PuntoColor, getColors } from './punto-color.svelte';
 
 const key = 'Game';
 
@@ -19,9 +20,28 @@ export function getGame() {
 	return game;
 }
 
+function getDeckNumbers() {
+	const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+	const deck = [...numbers, ...numbers];
+	return _.shuffle(deck);
+}
+
+function getSliceOfDeck(numbers: number[], part: number, parts: number) {
+	const partSize = Math.floor(numbers.length / parts);
+	const remainder = numbers.length % parts;
+	let start = partSize * (part - 1) + Math.min(remainder, part - 1);
+	if (part > remainder) {
+		start += remainder;
+	} else {
+		start += part - 1;
+	}
+	let end = start + partSize + (part <= remainder ? 1 : 0);
+	return numbers.slice(start, end);
+}
+
 export class PuntoGame {
-	readonly winAt: number;
-	private _winner = $state<PuntoPlayer | undefined>();
+	private _winAt = 5;
+	private _winner = $state<{ player: PuntoPlayer; color: PuntoColor } | undefined>();
 	private _isOver = $state(false);
 	endMessage = $state<string>('');
 	board = $state() as PuntoBoard;
@@ -38,6 +58,10 @@ export class PuntoGame {
 		return this._winner;
 	}
 
+	get winAt() {
+		return this._winAt;
+	}
+
 	get isOver() {
 		return this._isOver;
 	}
@@ -46,11 +70,73 @@ export class PuntoGame {
 		this.restart = restart;
 		this.board = new PuntoBoard(6, this);
 		this.players = _.shuffle(players);
-		this.winAt = 5;
-		if (players.length < 2) throw Error('Le punto se joue à 2 au minimum');
-		if (players.length > 4) throw Error('Le punto se joue à 4 au maximum');
-		if (players.length > 2) this.winAt = 4;
+		this.init(players);
 		this.setNextCard();
+	}
+
+	init(players: PuntoPlayer[]) {
+		this.players = players;
+		const nb = players.length;
+		if (nb === 2) return this.initFor2Players(players);
+		if (nb === 3) return this.initFor3Players(players);
+		if (nb === 4) return this.initFor4Players(players);
+		throw Error('Le punto se joue de 2 à 4 joueurs uniquement');
+	}
+
+	private initFor2Players(players: PuntoPlayer[]) {
+		this._winAt = 5;
+		const colors = getColors();
+		players.forEach((player) =>
+			player.deck.initCards([
+				{
+					numbers: getDeckNumbers(),
+					color: colors.pop()!,
+					neutral: false
+				},
+				{
+					numbers: getDeckNumbers(),
+					color: colors.pop()!,
+					neutral: false
+				}
+			])
+		);
+	}
+
+	private initFor3Players(players: PuntoPlayer[]) {
+		this._winAt = 4;
+		const colors = getColors();
+		const neutralColor = colors.pop()!;
+		const neutralDeck = getDeckNumbers();
+
+		players.forEach((player, index) =>
+			player.deck.initCards([
+				{
+					numbers: getDeckNumbers(),
+					color: colors.pop()!,
+					neutral: false
+				},
+				{
+					numbers: getSliceOfDeck(neutralDeck, index + 1, 3),
+					color: neutralColor,
+					neutral: true
+				}
+			])
+		);
+	}
+
+	private initFor4Players(players: PuntoPlayer[]) {
+		this._winAt = 4;
+		const colors = getColors();
+
+		players.forEach((player) =>
+			player.deck.initCards([
+				{
+					numbers: getDeckNumbers(),
+					color: colors.pop()!,
+					neutral: false
+				}
+			])
+		);
 	}
 
 	played() {
@@ -78,7 +164,7 @@ export class PuntoGame {
 		await wait(350);
 		const promises = series.map((s) => this.flashPlaces(s.serie.map((i) => i.place)));
 		await Promise.all(promises);
-		this._winner = series[0].deck.player;
+		this._winner = { player: series[0].player, color: series[0].serie[0].card.color };
 	}
 
 	private async flashPlaces(places: PuntoPlace[]) {

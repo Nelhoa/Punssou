@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { PuntoCard } from '$lib/models/Punto/punto-cards.svelte';
+	import type { PuntoCard } from '$lib/models/Punto/punto-card.svelte';
 	import type { PuntoPlace } from '$lib/models/Punto/punto-place.svelte';
 
 	import { cn } from '$lib/utils/cn';
@@ -10,9 +10,10 @@
 		place?: PuntoPlace;
 		styles?: string;
 		width?: number;
+		forbiden?: boolean;
 	}
 
-	let { card, styles, place, width }: Props = $props();
+	let { card, styles, place, width, forbiden }: Props = $props();
 </script>
 
 <div
@@ -20,8 +21,9 @@
 	class:hasWinner={Boolean(place?.board.game.winner)}
 	class:win={place?.win}
 	class:flash={place?.flash}
+	class:forbiden
 	class={cn('card size-[80px] text-2xl', styles)}
-	style="--color: {card.color}"
+	style="--color: {card.fightFor !== null ? card.color.color : 'hsl(0,0%,20%'}"
 >
 	<!-- {card.number} -->
 	<CardIcon {width} number={card.number} />
@@ -36,6 +38,10 @@
 		place-items: center;
 		background-color: var(--color);
 		color: white;
+
+		&.forbiden {
+			opacity: 35%;
+		}
 
 		&.hasWinner:not(.win) {
 			transition-property: opacity;
