@@ -3,6 +3,7 @@
 	import { settings } from '$lib/models/Punto/punto-settings.svelte';
 	import { wait } from '$lib/utils/wait';
 	import _ from 'lodash';
+	import Card6 from '../Icons/Cards/Card6.svelte';
 
 	interface Props {
 		onstart?: (players: PuntoPlayer[]) => any;
@@ -35,6 +36,9 @@
 </script>
 
 <div class="w-full h-screen flex flex-col gap-3 items-center justify-center bg-[--surface-color-1]">
+	<div class="bg-[red] rounded p-1 rotate-3 animation">
+		<Card6 styles="text-white" width={50} />
+	</div>
 	<div class="text-3xl mb-3 font-bold">Le Punto !</div>
 	<div class="flex flex-col gap-1 w-[90%] max-w-[250px]">
 		{#each players as player}
@@ -77,9 +81,53 @@
 
 	{#if onstart}
 		<button
+			class:colorAnimate={!(players.length < 2)}
 			class="bg-blue-500 text-lg disabled:bg-gray-300 text-white font-semibold rounded px-3 py-1 transition-transform hover:scale-110 disabled:hover:scale-100"
 			disabled={players.length < 2}
 			onclick={() => onstart(players)}>Démarrer</button
 		>
 	{/if}
 </div>
+
+<style>
+	@keyframes bounce {
+		50% {
+			transform: translateY(-25%);
+			animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+		}
+		0%,
+		100% {
+			transform: none;
+			animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+		}
+	}
+
+	@keyframes colorss {
+		0%,
+		24.99% {
+			background-color: blue;
+		}
+		25%,
+		49.99% {
+			background-color: red;
+		}
+		50%,
+		74.99% {
+			background-color: green;
+		}
+		75%,
+		100% {
+			background-color: orange;
+		}
+	}
+
+	.colorAnimate {
+		animation: colorss 4s infinite;
+	}
+
+	.animation {
+		animation:
+			bounce 1s infinite,
+			colorss 4s infinite;
+	}
+</style>
