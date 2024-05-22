@@ -26,4 +26,8 @@
 	});
 </script>
 
+<svelte:head>
+	<title>Punto</title>
+</svelte:head>
+
 <slot />
