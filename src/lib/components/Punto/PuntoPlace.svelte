@@ -23,14 +23,12 @@
 
 	async function setHover(card: PuntoCard) {
 		hoverCard = card;
-		await wait(4000);
-		hoverCard = undefined;
+		// await wait(4000);
+		// hoverCard = undefined;
 	}
 
 	async function setForbiden() {
 		forbiden = true;
-		await wait(4000);
-		forbiden = false;
 	}
 
 	async function setJustClicked() {
