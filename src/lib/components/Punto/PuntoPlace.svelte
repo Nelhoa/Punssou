@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { getGame } from '$lib/models/Punto/punto-game.svelte';
 	import type { PuntoPlace } from '$lib/models/Punto/punto-place.svelte';
-	import { Sound } from 'svelte-sound';
-	import { linear, quintIn, quintOut } from 'svelte/easing';
+	import { quintOut } from 'svelte/easing';
 	import { fly, scale, type TransitionConfig } from 'svelte/transition';
 	import Card from './Card.svelte';
 	import { PuntoCard } from '$lib/models/Punto/punto-card.svelte';
