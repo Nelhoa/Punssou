@@ -45,7 +45,7 @@ export class PuntoGame {
 	private _winAt = 5;
 	private _winner = $state<{ player: PuntoPlayer; color: PuntoColor } | undefined>();
 	private _isOver = $state(false);
-	readonly phoneMode = $derived(settings.layoutWidth < 350);
+	readonly phoneMode = $derived(settings.layoutWidth < 400);
 	endMessage = $state<string>('');
 	board = $state() as PuntoBoard;
 	players = $state<PuntoPlayer[]>([]);

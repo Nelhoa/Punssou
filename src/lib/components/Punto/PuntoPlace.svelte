@@ -10,7 +10,6 @@
 	import { wait } from '$lib/utils/wait';
 	import { sound_tock } from '$lib/sounds/sounds.svelte';
 	import { Confetti } from 'svelte-confetti';
-	import type { ComponentProps } from 'svelte';
 
 	let { place }: { place: PuntoPlace } = $props();
 	const game = getGame();
