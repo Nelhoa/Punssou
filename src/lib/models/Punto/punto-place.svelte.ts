@@ -1,8 +1,8 @@
 import {
-	getSimplePlaceSound,
 	sound_canon_explosion,
 	sound_conversion,
 	sound_shhho,
+	sound_smooth,
 	sound_yaaaa
 } from '$lib/sounds/sounds.svelte';
 import { wait } from '$lib/utils/wait';
@@ -55,7 +55,7 @@ export class PuntoPlace {
 		if (this.state === 'too far') throw Error('Impossible, la place est indisponible');
 		if (this.state === 'empty') {
 			this._card = card;
-			getSimplePlaceSound().play();
+			sound_smooth.play();
 		}
 		if (this.state === 'used' && this._card) {
 			if (this._card.number >= card.number)

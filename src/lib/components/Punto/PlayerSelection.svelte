@@ -5,6 +5,7 @@
 	import _ from 'lodash';
 	import Card6 from '../Icons/Cards/Card6.svelte';
 	import { sound_age_of_mythology_chill, sound_tic } from '$lib/sounds/sounds.svelte';
+	import { untrack } from 'svelte';
 
 	interface Props {
 		onstart?: (players: PuntoPlayer[]) => any;
@@ -36,8 +37,9 @@
 		if (e.key === 'Enter') addPlayer();
 	}
 
+	sound_age_of_mythology_chill.play();
+
 	$effect(() => {
-		sound_age_of_mythology_chill.play();
 		return () => {
 			sound_age_of_mythology_chill.stop();
 		};
