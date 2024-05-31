@@ -181,7 +181,7 @@ export class PuntoGame {
 				y: random(),
 				colorArray: [place.card?.color.color, 'white'],
 				size: 12,
-				duration: 1000
+				duration: _.shuffle([1000, 1200, 800, 600])[0]
 			});
 			await wait(170);
 		}
@@ -200,6 +200,6 @@ export class PuntoGame {
 }
 
 function random() {
-	const number = Math.random() * 2;
-	return [0 - number, 2 - number];
+	const number = Math.random() * 1.5;
+	return [0 - number, 1.5 - number];
 }
