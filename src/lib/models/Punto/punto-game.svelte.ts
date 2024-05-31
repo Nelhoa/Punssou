@@ -176,7 +176,14 @@ export class PuntoGame {
 		for (const place of places) {
 			place.flashFor(300, 0, true);
 			place.win = true;
-			await wait(220);
+			place.confettis.push({
+				x: random(),
+				y: random(),
+				colorArray: [place.card?.color.color, 'white'],
+				size: 12,
+				duration: 1000
+			});
+			await wait(170);
 		}
 	}
 
@@ -190,4 +197,9 @@ export class PuntoGame {
 		const index = newIndex >= this.playingPlayers.length ? 0 : newIndex;
 		return this.playingPlayers[index];
 	}
+}
+
+function random() {
+	const number = Math.random() * 2;
+	return [0 - number, 2 - number];
 }
