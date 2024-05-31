@@ -6,6 +6,8 @@ import _ from 'lodash';
 import type { PuntoPlace } from './punto-place.svelte';
 import { wait } from '$lib/utils/wait';
 import { PuntoColor, getColors } from './punto-color.svelte';
+import { settings } from './punto-settings.svelte';
+import { sound_egyptian_them, sound_win_music } from '$lib/sounds/sounds.svelte';
 
 const key = 'Game';
 
@@ -43,6 +45,7 @@ export class PuntoGame {
 	private _winAt = 5;
 	private _winner = $state<{ player: PuntoPlayer; color: PuntoColor } | undefined>();
 	private _isOver = $state(false);
+	readonly phoneMode = $derived(settings.layoutWidth < 350);
 	endMessage = $state<string>('');
 	board = $state() as PuntoBoard;
 	players = $state<PuntoPlayer[]>([]);
@@ -161,17 +164,20 @@ export class PuntoGame {
 
 	private async win(series: ReturnType<typeof this.board.getAllSeries>) {
 		this.end(`Bravo. Tu es très fort.`);
+
 		await wait(350);
 		const promises = series.map((s) => this.flashPlaces(s.serie.map((i) => i.place)));
 		await Promise.all(promises);
+		sound_egyptian_them.stop();
+		sound_win_music.play();
 		this._winner = { player: series[0].player, color: series[0].serie[0].card.color };
 	}
 
 	private async flashPlaces(places: PuntoPlace[]) {
 		for (const place of places) {
-			place.flashFor(300);
+			place.flashFor(300, 0, true);
 			place.win = true;
-			await wait(80);
+			await wait(150);
 		}
 	}
 

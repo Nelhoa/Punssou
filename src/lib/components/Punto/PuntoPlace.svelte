@@ -1,12 +1,14 @@
 <script lang="ts">
 	import { getGame } from '$lib/models/Punto/punto-game.svelte';
 	import type { PuntoPlace } from '$lib/models/Punto/punto-place.svelte';
+	import { Sound } from 'svelte-sound';
 	import { linear, quintIn, quintOut } from 'svelte/easing';
 	import { fly, scale, type TransitionConfig } from 'svelte/transition';
 	import Card from './Card.svelte';
 	import { PuntoCard } from '$lib/models/Punto/punto-card.svelte';
 	import Cross from '../Icons/Cross.svelte';
 	import { wait } from '$lib/utils/wait';
+	import { sound_tic } from '$lib/sounds/sounds.svelte';
 
 	let { place }: { place: PuntoPlace } = $props();
 	const game = getGame();
@@ -21,13 +23,16 @@
 		return fly(element, config);
 	}
 
-	async function setHover(card: PuntoCard) {
+	async function handleCardHover(card: PuntoCard) {
+		if (game.phoneMode) return;
+		sound_tic.play();
 		hoverCard = card;
 		// await wait(4000);
 		// hoverCard = undefined;
 	}
 
-	async function setForbiden() {
+	async function handleCardForbiden() {
+		if (game.phoneMode) return;
 		forbiden = true;
 	}
 
@@ -57,9 +62,9 @@
 		if (place.state === 'locked' || place.state === 'too far') return;
 		if (game.isOver) return;
 		if (!place.card || place.card.number < currentCard.number) {
-			setHover(currentCard);
+			handleCardHover(currentCard);
 		} else if (place.card && place.card.number >= currentCard.number) {
-			setForbiden();
+			handleCardForbiden();
 		}
 	}
 

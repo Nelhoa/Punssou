@@ -4,6 +4,7 @@
 	import { wait } from '$lib/utils/wait';
 	import _ from 'lodash';
 	import Card6 from '../Icons/Cards/Card6.svelte';
+	import { sound_age_of_mythology_chill, sound_tic } from '$lib/sounds/sounds.svelte';
 
 	interface Props {
 		onstart?: (players: PuntoPlayer[]) => any;
@@ -17,6 +18,7 @@
 	let disableAddPlayer = $derived(players.length >= 4 || newName.length < 1);
 
 	function newPlayer(name: string) {
+		sound_tic.play();
 		players.push(new PuntoPlayer(name));
 	}
 
@@ -33,6 +35,13 @@
 	function onkeydown(e: KeyboardEvent) {
 		if (e.key === 'Enter') addPlayer();
 	}
+
+	$effect(() => {
+		sound_age_of_mythology_chill.play();
+		return () => {
+			sound_age_of_mythology_chill.stop();
+		};
+	});
 </script>
 
 <div class="w-full h-screen flex flex-col gap-3 items-center justify-center bg-[--surface-color-1]">
@@ -74,9 +83,15 @@
 		>
 	</div>
 
-	<div class="flex gap-2 my-2">
-		<input type="checkbox" bind:checked={settings.showNumber} />
-		<div class="font-semibold text-[15px] text-black/70">Montrer les nombres</div>
+	<div class="my-2">
+		<div class="flex gap-2">
+			<input type="checkbox" bind:checked={settings.showNumber} />
+			<div class="font-semibold text-[15px] text-black/70">Montrer les nombres</div>
+		</div>
+		<div class="flex gap-2 mt-1">
+			<input type="checkbox" bind:checked={settings.muteMusic} />
+			<div class="font-semibold text-[15px] text-black/70">Sans musique</div>
+		</div>
 	</div>
 
 	{#if onstart}

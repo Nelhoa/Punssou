@@ -1,3 +1,10 @@
+import {
+	getSimplePlaceSound,
+	sound_canon_explosion,
+	sound_conversion,
+	sound_shhho,
+	sound_yaaaa
+} from '$lib/sounds/sounds.svelte';
 import { wait } from '$lib/utils/wait';
 import { PuntoBoard } from './punto-board.svelte';
 import type { PuntoCard } from './punto-card.svelte';
@@ -46,12 +53,23 @@ export class PuntoPlace {
 	setCard(card: PuntoCard) {
 		if (this.state === 'locked') throw Error('Impossible. La place est vérouillée');
 		if (this.state === 'too far') throw Error('Impossible, la place est indisponible');
-		if (this.state === 'empty') this._card = card;
+		if (this.state === 'empty') {
+			this._card = card;
+			getSimplePlaceSound().play();
+		}
 		if (this.state === 'used' && this._card) {
 			if (this._card.number >= card.number)
 				throw Error('Seule une carte de niveau supérieure peut être placée');
+			if (this._card.fightFor !== card.fightFor) {
+				if (card.number === 9) sound_yaaaa.play();
+				if (card.number <= 8) sound_conversion.play();
+			} else {
+				sound_shhho.play();
+			}
+
 			this._card = card;
 		}
+
 		this.update();
 		this.board.game.played();
 	}
@@ -75,8 +93,9 @@ export class PuntoPlace {
 		return 'too far';
 	}
 
-	async flashFor(ms: number, delay?: number) {
+	async flashFor(ms: number, delay: number, sound = true) {
 		if (delay) await wait(delay);
+		if (sound) sound_canon_explosion.play();
 		this.flash = true;
 		await wait(ms);
 		this.flash = false;

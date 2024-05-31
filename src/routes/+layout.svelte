@@ -2,6 +2,7 @@
 	import '../app.css';
 	import { goto, invalidate } from '$app/navigation';
 	import { onMount } from 'svelte';
+	import { settings } from '$lib/models/Punto/punto-settings.svelte';
 
 	export let data;
 	$: ({ session, supabase } = data);
@@ -25,6 +26,8 @@
 		return () => data.subscription.unsubscribe();
 	});
 </script>
+
+<svelte:window bind:innerWidth={settings.layoutWidth} />
 
 <svelte:head>
 	<title>Punto</title>
