@@ -3,7 +3,8 @@
 	import { newGame } from '$lib/models/Punto/punto-game.svelte';
 	import PuntoBoard from './PuntoBoard.svelte';
 	import GameInfo from './GameInfo.svelte';
-	import { sound_egyptian_them, sound_win_music } from '$lib/sounds/sounds.svelte';
+	import { music_egyptian, music_win } from '$lib/sounds/musics.svelte';
+	import { sound_drum_start } from '$lib/sounds/sounds.svelte';
 
 	interface Props {
 		players: PuntoPlayer[];
@@ -14,13 +15,13 @@
 	let { players, back, restart }: Props = $props();
 	let game = $state(newGame(players, restart));
 
-	$effect(() => {
-		sound_win_music.stop();
-		sound_egyptian_them.play();
+	music_egyptian.play();
+	sound_drum_start.play();
 
+	$effect(() => {
 		return () => {
-			sound_egyptian_them.stop();
-			sound_win_music.stop();
+			music_egyptian.stop();
+			music_win.stop();
 		};
 	});
 </script>

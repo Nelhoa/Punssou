@@ -4,8 +4,10 @@
 	import { wait } from '$lib/utils/wait';
 	import _ from 'lodash';
 	import Card6 from '../Icons/Cards/Card6.svelte';
-	import { sound_age_of_mythology_chill, sound_tic } from '$lib/sounds/sounds.svelte';
+	import { sound_tock } from '$lib/sounds/sounds.svelte';
+	import { music_chill } from '$lib/sounds/musics.svelte';
 	import { untrack } from 'svelte';
+	import { browser } from '$app/environment';
 
 	interface Props {
 		onstart?: (players: PuntoPlayer[]) => any;
@@ -19,7 +21,7 @@
 	let disableAddPlayer = $derived(players.length >= 4 || newName.length < 1);
 
 	function newPlayer(name: string) {
-		sound_tic.play();
+		sound_tock.play();
 		players.push(new PuntoPlayer(name));
 	}
 
@@ -37,11 +39,11 @@
 		if (e.key === 'Enter') addPlayer();
 	}
 
-	sound_age_of_mythology_chill.play();
+	music_chill.play();
 
 	$effect(() => {
 		return () => {
-			sound_age_of_mythology_chill.stop();
+			music_chill.stop();
 		};
 	});
 </script>

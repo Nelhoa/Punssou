@@ -1,4 +1,4 @@
-import { playingMusic } from '$lib/sounds/sounds.svelte';
+import { playingMusic } from '$lib/sounds/custom-music.svelte';
 
 export const settings = $state({
 	showNumber: false,

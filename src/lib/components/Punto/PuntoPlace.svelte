@@ -8,7 +8,9 @@
 	import { PuntoCard } from '$lib/models/Punto/punto-card.svelte';
 	import Cross from '../Icons/Cross.svelte';
 	import { wait } from '$lib/utils/wait';
-	import { sound_tic } from '$lib/sounds/sounds.svelte';
+	import { sound_tock } from '$lib/sounds/sounds.svelte';
+	import { Confetti } from 'svelte-confetti';
+	import type { ComponentProps } from 'svelte';
 
 	let { place }: { place: PuntoPlace } = $props();
 	const game = getGame();
@@ -25,7 +27,7 @@
 
 	async function handleCardHover(card: PuntoCard) {
 		if (game.phoneMode) return;
-		sound_tic.play();
+		sound_tock.play();
 		hoverCard = card;
 		// await wait(4000);
 		// hoverCard = undefined;
@@ -106,6 +108,10 @@
 		{:else}
 			{' '}
 		{/if}
+
+		{#each place.confettis as confettisProps}
+			<Confetti {...confettisProps} />
+		{/each}
 
 		{#if hoverCard && !justClicked}
 			<div class="absolute inset-1" in:fly={{ x: -5 }}>

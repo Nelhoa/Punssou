@@ -3,9 +3,6 @@ import { PuntoCard } from './punto-card.svelte';
 import type { PuntoPlayer } from './punto-player.svelte';
 import type { PuntoColor } from './punto-color.svelte';
 
-// const cards = [1, 2, 3] as const;
-// const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9] as const;
-
 type cardTypeOptions = {
 	color: PuntoColor;
 	neutral: boolean;

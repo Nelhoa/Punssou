@@ -7,7 +7,7 @@ import type { PuntoPlace } from './punto-place.svelte';
 import { wait } from '$lib/utils/wait';
 import { PuntoColor, getColors } from './punto-color.svelte';
 import { settings } from './punto-settings.svelte';
-import { sound_egyptian_them, sound_win_music } from '$lib/sounds/sounds.svelte';
+import { music_win } from '$lib/sounds/musics.svelte';
 
 const key = 'Game';
 
@@ -168,8 +168,7 @@ export class PuntoGame {
 		await wait(350);
 		const promises = series.map((s) => this.flashPlaces(s.serie.map((i) => i.place)));
 		await Promise.all(promises);
-		sound_egyptian_them.stop();
-		sound_win_music.play();
+		music_win.play();
 		this._winner = { player: series[0].player, color: series[0].serie[0].card.color };
 	}
 
@@ -177,7 +176,7 @@ export class PuntoGame {
 		for (const place of places) {
 			place.flashFor(300, 0, true);
 			place.win = true;
-			await wait(150);
+			await wait(220);
 		}
 	}
 

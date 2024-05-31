@@ -2,7 +2,6 @@
 	import PlayerSelection from '$lib/components/Punto/PlayerSelection.svelte';
 	import PuntoGame from '$lib/components/Punto/PuntoGame.svelte';
 	import type { PuntoPlayer } from '$lib/models/Punto/punto-player.svelte';
-	import { sound_drum_start } from '$lib/sounds/sounds.svelte';
 	import { signInWithGithub } from '$lib/utils/Auth/sign-in-with-github.js';
 	import { signOut } from '$lib/utils/Auth/sign-out';
 	import Broadcast from './Broadcast.svelte';
@@ -13,7 +12,6 @@
 	let trigger = $state<Symbol>(Symbol());
 
 	function onstart(selected: PuntoPlayer[]) {
-		sound_drum_start.play();
 		players = selected;
 		start = true;
 	}
