@@ -11,7 +11,7 @@
 	{#if currentCard}
 		<div class="flex gap-x-10 gap-y-3 items-start flex-wrap">
 			<div class="min-w-[150px]">
-				<div class="font-bold mb-1 mt-5 leading-none text-lg">{currentCard.player.name}</div>
+				<div class="font-bold mb-1 mt-5 leading-none text-lg">{currentCard.player.player.name}</div>
 				<div class="mb-3 mt-2 font-semibold text-black/70">À ton tour !</div>
 
 				<div class="grid grid-cols-1 size-[80px]" style="grid-template-areas: card;">
@@ -26,30 +26,30 @@
 			<div>
 				<div class="font-semibold mb-1 mt-5">Joueurs</div>
 				<div>
-					{#each game.players as player}
+					{#each game.players as player (player)}
 						<div class="flex items-center gap-[6px]">
-							{#each player.colors as { color }}
-								<div class="size-[14px] bg-[--color] rounded" style="--color: {color}"></div>
+							{#each player.colors as color (color)}
+								<div class="size-[14px] bg-[--color] rounded" style="--color: {color.color}"></div>
 							{/each}
-							<div class="font-semibold text-black/85">{player.name}</div>
+							<div class="font-semibold text-black/85">{player.player.name}</div>
 						</div>
 					{/each}
 				</div>
 			</div>
 
-			<!-- <div>
-			<div class="font-semibold mb-1 mt-5">Tes cartes</div>
-			<div class="flex gap-1 flex-wrap">
-				{#each currentCard.deck.cards as card}
-					<div
-						class="font-semibold text-white bg-[--color] size-5 flex place-items-center justify-center rounded"
-						style="--color: {card.color.color}"
-					>
-						{card.number}
-					</div>
-				{/each}
+			<div>
+				<div class="font-semibold mb-1 mt-5">Tes cartes</div>
+				<div class="flex gap-1 flex-wrap">
+					{#each currentCard.deck.cards as card}
+						<div
+							class="font-semibold text-white bg-[--color] size-5 flex place-items-center justify-center rounded"
+							style="--color: {card.color.color}"
+						>
+							{card.number}
+						</div>
+					{/each}
+				</div>
 			</div>
-		</div> -->
 		</div>
 	{/if}
 
@@ -59,7 +59,7 @@
 				class="font-semibold text-white bg-[--color] px-3 py-1 text-lg flex place-items-center justify-center rounded"
 				style="--color: {game.winner.color.color}"
 			>
-				{game.winner.player.name} a gagné !
+				{game.winner.player.player.name} a gagné !
 			</div>
 			<div class="mt-3">
 				<div class="font-bold text-sm tracking-wide text-black/65">Liste des loosers :</div>
@@ -69,7 +69,7 @@
 							class="font-bold text-white bg-[--color] w-fit px-3 rounded mt-1"
 							style="--color: {looser.colors[0].color}"
 						>
-							{looser.name}
+							{looser.player.name}
 						</div>
 					{/each}
 				</div>

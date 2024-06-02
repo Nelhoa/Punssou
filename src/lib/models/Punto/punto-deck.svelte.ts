@@ -2,27 +2,29 @@ import _ from 'lodash';
 import { PuntoCard } from './punto-card.svelte';
 import type { PuntoPlayer } from './punto-player.svelte';
 import type { PuntoColor } from './punto-color.svelte';
+import type { PuntoGamePlayer } from './punto-game-player';
 
-type cardTypeOptions = {
+export type DeckConstructor = {
 	color: PuntoColor;
 	neutral: boolean;
 	numbers: number[];
 };
 export class PuntoDeck {
-	player: PuntoPlayer;
-	cards = $state<PuntoCard[]>([]);
-	private _playedCards = $state<PuntoCard[]>([]);
+	player: PuntoGamePlayer;
+	cards = $state([]) as PuntoCard[];
+	private _playedCards = $state([]) as PuntoCard[];
 	readonly everyCards = $derived([...this.cards, ...this._playedCards]);
 
-	constructor(player: PuntoPlayer) {
+	constructor(player: PuntoGamePlayer, deckConstructor: DeckConstructor[]) {
 		this.player = player;
+		this.initCards(deckConstructor);
 	}
 
-	initCards(options: cardTypeOptions[]) {
+	initCards(options: DeckConstructor[]) {
 		const player = this.player;
 		const deck = this;
 
-		function createCards({ color, neutral, numbers }: cardTypeOptions) {
+		function createCards({ color, neutral, numbers }: DeckConstructor) {
 			return numbers.map((n) => new PuntoCard(n, color, player, neutral, deck));
 		}
 

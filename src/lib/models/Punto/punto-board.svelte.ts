@@ -1,4 +1,5 @@
 import type { PuntoCard } from './punto-card.svelte';
+import type { PuntoGamePlayer } from './punto-game-player';
 import type { PuntoGame } from './punto-game.svelte';
 import { PuntoPlace } from './punto-place.svelte';
 import type { PuntoPlayer } from './punto-player.svelte';
@@ -161,7 +162,7 @@ function getSeries(
 	{ x, y }: { x: number; y: number },
 	direction: 'col' | 'row' | 'dia' | 'dia-mirror'
 ) {
-	type SerieItem = { place: PuntoPlace; card: PuntoCard; player: PuntoPlayer };
+	type SerieItem = { place: PuntoPlace; card: PuntoCard; player: PuntoGamePlayer };
 	const addx = ['col', 'dia', 'dia-mirror'].includes(direction) ? 1 : 0;
 	const addy = ['row', 'dia'].includes(direction) ? 1 : direction === 'dia-mirror' ? -1 : 0;
 	const series: SerieItem[][] = [];

@@ -1,10 +1,10 @@
 import type { PuntoColor } from './punto-color.svelte';
 import type { PuntoDeck } from './punto-deck.svelte';
-import type { PuntoPlayer } from './punto-player.svelte';
+import type { PuntoGamePlayer } from './punto-game-player';
 
 export class PuntoCard {
-	player: PuntoPlayer;
-	fightFor: null | PuntoPlayer;
+	player: PuntoGamePlayer;
+	fightFor: null | PuntoGamePlayer;
 	color: PuntoColor;
 	deck: PuntoDeck;
 	number: number;
@@ -12,7 +12,7 @@ export class PuntoCard {
 	constructor(
 		number: number,
 		color: PuntoColor,
-		player: PuntoPlayer,
+		player: PuntoGamePlayer,
 		neutral: boolean,
 		deck: PuntoDeck
 	) {
