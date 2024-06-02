@@ -37,7 +37,7 @@
 				</div>
 			</div>
 
-			<div>
+			<!-- <div>
 				<div class="font-semibold mb-1 mt-5">Tes cartes</div>
 				<div class="flex gap-1 flex-wrap">
 					{#each currentCard.deck.cards as card}
@@ -49,7 +49,7 @@
 						</div>
 					{/each}
 				</div>
-			</div>
+			</div> -->
 		</div>
 	{/if}
 
