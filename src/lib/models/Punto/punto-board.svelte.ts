@@ -13,6 +13,7 @@ export class PuntoBoard {
 		this.map.filter((i) => i.state !== 'too far' && i.state !== 'locked')
 	);
 	mapToShow = $derived(this.map.filter((p) => isInSize(p, this.grid)));
+	mapToShowSize = $derived(getSize(this.mapToShow));
 	grid = $derived(getSize(this.mapFiltered));
 
 	get fullmap() {

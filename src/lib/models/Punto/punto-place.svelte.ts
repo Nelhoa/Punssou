@@ -1,5 +1,5 @@
 import {
-	sound_explosion,
+	sound_cymbals,
 	sound_conversion,
 	sound_hurt,
 	sound_shhho,
@@ -116,7 +116,7 @@ export class PuntoPlace {
 
 	async flashFor(ms: number, delay: number, sound = true) {
 		if (delay) await wait(delay);
-		if (sound) sound_explosion.play();
+		if (sound) sound_cymbals.play();
 		this.flash = true;
 		await wait(ms);
 		this.flash = false;

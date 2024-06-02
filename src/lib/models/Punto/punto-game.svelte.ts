@@ -66,27 +66,27 @@ export class PuntoGame {
 		if (this.playingPlayers.length === 0) return this.stop('Plus aucun joueur n’a de carte');
 		const currentCard = this.setNextCard();
 		if (!currentCard) return this.stop('Plus aucun joueur n’a de carte');
-		if (!this.board.canPlay(currentCard)) return this.stop('Impossible de poser la carte');
+		if (!this.board.canPlay(currentCard)) return this.stop('Plus possible de poser de carte !');
 	}
 
 	private stop(message: string) {
 		this.end(message);
 	}
 
-	private end(message: string) {
+	private end(message: string, winner?: winner) {
 		this.endMessage = message;
 		this._currentCard = undefined;
+		this._winner = winner;
 		this._isOver = true;
 	}
 
 	private async win(series: ReturnType<typeof this.board.getAllSeries>) {
-		this.end(`Bravo. Tu es très fort.`);
-
-		await wait(350);
+		const winner = { player: series[0].player, color: series[0].serie[0].card.color };
+		this.end(`Bravo. Tu es très fort.`, winner);
+		await wait(500);
 		const promises = series.map((s) => this.flashPlaces(s.serie.map((i) => i.place)));
 		await Promise.all(promises);
 		music_win.play();
-		this._winner = { player: series[0].player, color: series[0].serie[0].card.color };
 	}
 
 	private async flashPlaces(places: PuntoPlace[]) {

@@ -8,10 +8,10 @@ import dirt1 from './sounds/Rooted_Dirt_step1.ogg';
 import dirt2 from './sounds/Rooted_Dirt_step2.ogg';
 import dirt3 from './sounds/Rooted_Dirt_step3.ogg';
 import dirt4 from './sounds/Rooted_Dirt_step4.ogg';
-import explosion1 from './sounds/Explosion1.ogg';
-import explosion2 from './sounds/Explosion2.ogg';
-import explosion3 from './sounds/Explosion3.ogg';
-import explosion4 from './sounds/Explosion4.ogg';
+import cymbal1 from './sounds/cymbals/cymbal1.wav';
+import cymbal2 from './sounds/cymbals/cymbal2.wav';
+import cymbal3 from './sounds/cymbals/cymbal3.wav';
+import cymbal4 from './sounds/cymbals/cymbal4.wav';
 import tock from './sounds/toc.mp3';
 import chickenHirt1 from './sounds/Chicken_hurt1.ogg';
 import chickenHirt2 from './sounds/Chicken_hurt2.ogg';
@@ -24,10 +24,11 @@ export const sound_conversion = new CustomSound([prrroh]);
 export const sound_yaaaa = new CustomSound([yaaa]);
 export const sound_shhho = new CustomSound([shhho]);
 export const sound_drum_start = new CustomSound([drum_start]);
-export const sound_explosion = new CustomSound(
-	[explosion1],
-	[explosion2],
-	[explosion3],
-	[explosion4]
-);
+export const sound_cymbals = new CustomSound([cymbal1], [cymbal2], [cymbal3], [cymbal4]);
+// export const sound_explosion = new CustomSound(
+// 	[explosion1],
+// 	[explosion2],
+// 	[explosion3],
+// 	[explosion4]
+// );
 export const sound_hurt = new CustomSound([chickenHirt1], [chickenHirt2]);
