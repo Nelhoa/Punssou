@@ -41,7 +41,7 @@
 		property="og:description"
 		content="Jouer entre 2 et 4 joueurs. Aligner vos cartes pour gagner."
 	/>
-	<meta property="og:image" content="/og-punssou.jpg" />
+	<meta property="og:image" content="https://www.punto.planhead.fr/og-punssou.jpg" />
 
 	<!-- Twitter Meta Tags -->
 	<meta name="twitter:card" content="summary_large_image" />
@@ -52,7 +52,7 @@
 		name="twitter:description"
 		content="Jouer entre 2 et 4 joueurs. Aligner vos cartes pour gagner."
 	/>
-	<meta name="twitter:image" content="/og-punssou.jpg" />
+	<meta name="twitter:image" content="https://www.punto.planhead.fr/og-punssou.jpg" />
 </svelte:head>
 
 <slot />
