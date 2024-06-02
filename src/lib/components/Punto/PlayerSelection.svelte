@@ -52,7 +52,7 @@
 	<div class="bg-[red] rounded p-1 rotate-3 animation">
 		<Card6 styles="text-white" width={50} />
 	</div>
-	<div class="text-3xl mb-3 font-bold">Le Punto !</div>
+	<div class="text-3xl mb-3 font-bold">Punssou !</div>
 	<div class="flex flex-col gap-1 w-[90%] max-w-[250px]">
 		{#each players as player}
 			<div class="grid grid-cols-[1fr_auto] gap-3">
