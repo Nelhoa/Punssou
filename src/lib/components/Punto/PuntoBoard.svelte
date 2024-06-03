@@ -56,8 +56,13 @@
 		align-items: center;
 	}
 	.board {
-		--size: 55px;
-		--gap: 4px;
+		--size: 70px;
+		--gap: 6px;
+
+		@media (max-width: 950px) {
+			--size: 55px;
+			--gap: 4px;
+		}
 
 		@media (max-width: 700px) {
 			--size: 50px;
