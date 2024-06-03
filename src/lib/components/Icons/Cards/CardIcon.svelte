@@ -16,7 +16,7 @@
 		width?: number;
 	}
 
-	let { number, styles = '', width = $bindable(53) }: Props = $props();
+	let { number, styles = '', width = $bindable(60) }: Props = $props();
 </script>
 
 {#if settings.showNumber}
