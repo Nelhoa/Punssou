@@ -106,6 +106,9 @@
 			onclick={() => onstart(players)}>Démarrer</button
 		>
 	{/if}
+	<a href="/" class="font-bold tracking-wide text-black/30 hover:text-black/55"
+		>Retour à l’accueil</a
+	>
 </div>
 
 <style>

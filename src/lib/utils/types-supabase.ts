@@ -9,6 +9,104 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      game_players: {
+        Row: {
+          created_at: string
+          deck: Json | null
+          end: Database["public"]["Enums"]["player_end_status"] | null
+          game_id: number
+          id: number
+          status: Database["public"]["Enums"]["player_status"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          deck?: Json | null
+          end?: Database["public"]["Enums"]["player_end_status"] | null
+          game_id: number
+          id?: number
+          status: Database["public"]["Enums"]["player_status"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          deck?: Json | null
+          end?: Database["public"]["Enums"]["player_end_status"] | null
+          game_id?: number
+          id?: number
+          status?: Database["public"]["Enums"]["player_status"]
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "game_players_game_id_fkey"
+            columns: ["game_id"]
+            isOneToOne: false
+            referencedRelation: "games"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "game_players_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      games: {
+        Row: {
+          created_at: string
+          current_turn: number | null
+          end_message: string | null
+          id: number
+          player_index: number[] | null
+          status: Database["public"]["Enums"]["game_status"]
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          current_turn?: number | null
+          end_message?: string | null
+          id?: number
+          player_index?: number[] | null
+          status: Database["public"]["Enums"]["game_status"]
+          title: string
+        }
+        Update: {
+          created_at?: string
+          current_turn?: number | null
+          end_message?: string | null
+          id?: number
+          player_index?: number[] | null
+          status?: Database["public"]["Enums"]["game_status"]
+          title?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          pseudo: string | null
+          user_id: string
+        }
+        Insert: {
+          pseudo?: string | null
+          user_id: string
+        }
+        Update: {
+          pseudo?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profiles_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       todos: {
         Row: {
           created_at: string
@@ -38,7 +136,9 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      game_status: "creation" | "playing" | "done"
+      player_end_status: "win" | "lost"
+      player_status: "owner" | "wanna-join" | "accepted" | "rejected"
     }
     CompositeTypes: {
       [_ in never]: never
