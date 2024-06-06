@@ -1,16 +1,18 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
 	import { slide } from 'svelte/transition';
 	import { games } from '$lib/models/Listener/games.svelte';
-	import { join } from 'lodash';
+	import { goto } from '$app/navigation';
 
 	let newGameTitle = $state('');
 
 	async function createGame() {
 		if (newGameTitle.length < 2) return;
 		const newGamePromise = games.createGame(newGameTitle);
+
 		newGameTitle = '';
 		const newGame = await newGamePromise;
+		if (!newGame) return;
+		goto(`/online/game-${newGame.id}`);
 	}
 </script>
 

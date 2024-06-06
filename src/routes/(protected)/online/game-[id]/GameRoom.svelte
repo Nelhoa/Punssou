@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import type { OnlineGamePlayer } from '$lib/models/Listener/game-player.svelte';
 	import type { OnlineGame } from '$lib/models/Listener/game.svelte';
 	import type { getCompletedProfile } from '$lib/utils/Auth/is-user-registered';
@@ -15,6 +16,13 @@
 
 	const players = $derived(game.players);
 	const request = $derived(players.filter((i) => i.row.status === 'wanna-join'));
+
+	const statusMessages: Record<typeof myRow.row.status, string> = {
+		owner: 'Vous êtes l’organisateur',
+		accepted: 'Vous avez été accepté dans la partie',
+		'wanna-join': 'En attente d’acceptation...',
+		rejected: 'L’organisateur a refusé votre participation'
+	};
 </script>
 
 {#snippet pseudo(player: OnlineGamePlayer)}
@@ -32,8 +40,9 @@
 	<div class="text-sm text-black/50 mb-5">
 		Statut : {game.row.status}
 	</div>
+
 	<div>
-		Votre statut : {myRow.row.status}
+		{statusMessages[myRow.row.status]}
 	</div>
 	{#if isOwner && request.length > 0}
 		<div class="my-3 mb-6">
@@ -59,4 +68,14 @@
 			</div>
 		{/each}
 	</div>
+
+	<button
+		class="mt-5 px-2 hover:bg-black/70 rounded bg-black/40 text-white"
+		onclick={() => {
+			game.leave();
+			goto(`/online`);
+		}}
+	>
+		Quitter la partie
+	</button>
 </div>

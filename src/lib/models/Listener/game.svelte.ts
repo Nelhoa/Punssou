@@ -53,11 +53,25 @@ export class OnlineGame {
 		if (this.myPlayerRow) {
 			if (this.myPlayerRow.row.status === 'rejected') return;
 		} else {
+			const acceptedPlayers = this.players.filter((i) =>
+				['owner', 'accepted'].includes(i.row.status)
+			);
+			if (acceptedPlayers.length >= 2) return;
 			await supabase()
 				.from('game_players')
 				.insert({ user_id, game_id: this.id, status: 'wanna-join' });
 		}
 		this.goToRoom();
+	}
+
+	async leave() {
+		if (!this.myPlayerRow) return;
+		if (this.myPlayerRow.row.status === 'owner') {
+			const newOwner = this.players.filter((i) => i !== this.myPlayerRow)[0];
+			if (!newOwner) return await supabase().from('games').delete().eq('id', this.id);
+			await supabase().from('game_players').update({ status: 'owner' }).eq('id', newOwner.id);
+		}
+		await supabase().from('game_players').delete().eq('id', this.myPlayerRow.id);
 	}
 
 	goToRoom() {

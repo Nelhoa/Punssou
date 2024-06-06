@@ -21,9 +21,14 @@ export class GameList {
 	#games = $state<OnlineGame[]>([]);
 	users = new Listener<UserProfileDB['Row'], string>(
 		(row) => {
-			const id = row.user_id;
-			if (!id) throw Error('No id found');
-			return id;
+			try {
+				const id = row.user_id;
+				if (!id) throw Error('No id found');
+				return id;
+			} catch (err) {
+				console.log('No id found on this row :', row);
+				throw err;
+			}
 		},
 		async () => {
 			const { data } = await supabase().from('profiles').select();
@@ -67,15 +72,6 @@ export class GameList {
 				'postgres_changes',
 				{ event: '*', schema: 'public', table: 'game_players' },
 				this.handlePlayerChange.bind(this)
-			)
-			.on<UserProfileDB['Row']>(
-				'postgres_changes',
-				{
-					event: '*',
-					schema: 'public',
-					table: 'game_players'
-				},
-				(payload) => this.users.handleChange(payload)
 			)
 			.subscribe(async (status) => {
 				console.log('Game changes :', status);
@@ -162,9 +158,12 @@ export class GameList {
 	}
 
 	async createGame(title: string) {
+		const user_id = OnlineData.user_id;
+		if (!user_id) return;
 		const newGame: GameDB['Insert'] = { title, status: 'creation' };
 		const { data } = await supabase().from('games').insert(newGame).select().maybeSingle();
 		if (!data) throw Error('No ame created');
+		await supabase().from('game_players').insert({ user_id, game_id: data.id, status: 'owner' });
 		return data;
 	}
 
